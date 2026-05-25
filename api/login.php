@@ -11,7 +11,7 @@ if (!$email || !$password) {
 }
 
 $stmt = $pdo->prepare(
-    'SELECT id, nama, email, id_alat, alamat, no_telepon, password_hash
+    'SELECT id, nama, email, id_alat, alamat, no_telepon, foto_profil, password_hash
      FROM users
      WHERE email = ?
      LIMIT 1'
@@ -24,13 +24,16 @@ if (!$user || !password_verify($password, $user['password_hash'])) {
     fail('Email atau password salah.');
 }
 
+session_regenerate_id(true);
+
 $_SESSION['user'] = [
     'id'         => $user['id'],
     'nama'       => $user['nama'],
     'email'      => $user['email'],
     'id_alat'    => $user['id_alat'],
     'alamat'     => $user['alamat'] ?? '',
-    'no_telepon' => $user['no_telepon'] ?? ''
+    'no_telepon' => $user['no_telepon'] ?? '',
+    'foto_profil'=> $user['foto_profil'] ?? ''
 ];
 
 ok([

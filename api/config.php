@@ -1,5 +1,13 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_set_cookie_params([
+        'lifetime' => 60 * 60 * 24 * 7,
+        'path' => '/',
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+    session_start();
+}
 header('Content-Type: application/json; charset=utf-8');
 
 $host = 'localhost';
@@ -14,7 +22,7 @@ try {
     ]);
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(['success'=>false,'message'=>'Database belum terhubung. Import database/monech.sql lalu cek api/config.php.']);
+    echo json_encode(['success'=>false,'message'=>'Database belum terhubung. Import database/monech_database.sql lalu cek api/config.php.']);
     exit;
 }
 function input_json(){
@@ -24,4 +32,11 @@ function input_json(){
 }
 function ok($data=[]){ echo json_encode(['success'=>true] + $data); exit; }
 function fail($msg,$code=400){ http_response_code($code); echo json_encode(['success'=>false,'message'=>$msg]); exit; }
+function require_login(){
+    if (empty($_SESSION['user'])) {
+        fail('Belum login.', 401);
+    }
+
+    return $_SESSION['user'];
+}
 ?>

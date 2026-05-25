@@ -19,23 +19,18 @@
       </div>
     </div>
 
-    <a href="menu.php" class="home-icon">🏠</a>
+    <a href="menu.php" class="home-icon" aria-label="Kembali ke menu">⌂</a>
   </header>
 
   <section class="help-top">
-    <h1>Butuh<br>Bantuan ?</h1>
+    <h1>Butuh<br>Bantuan?</h1>
   </section>
-
-  <div class="help-wave help-wave1"></div>
-  <div class="help-wave help-wave2"></div>
-  <div class="help-wave help-wave3"></div>
-  <div class="help-wave help-wave4"></div>
 
   <section class="help-content">
 
     <div class="help-search">
-      <input type="text" placeholder="cari pertanyaan">
-      <span>🔍</span>
+      <input type="text" placeholder="Cari pertanyaan">
+      <span aria-hidden="true">⌕</span>
     </div>
 
     <h3>Pertanyaan Umum</h3>

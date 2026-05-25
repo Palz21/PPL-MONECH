@@ -1,10 +1,8 @@
 <?php
 require __DIR__ . '/config.php';
 
-if (empty($_SESSION['user'])) {
-    fail('Belum login.');
-}
+$user = require_login();
 
 ok([
-    'user' => $_SESSION['user']
+    'user' => $user
 ]);

@@ -3,6 +3,7 @@ const $$ = (selector) => document.querySelectorAll(selector);
 const API = (path) => `api/${path}`;
 
 let historyData = [];
+let currentUser = null;
 
 function showToast(message) {
   const toast = $('#toast');
@@ -70,6 +71,7 @@ async function post(url, form) {
 
   const response = await fetch(API(url), {
     method: 'POST',
+    credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json'
     },
@@ -86,13 +88,34 @@ async function post(url, form) {
 }
 
 async function getJSON(url) {
-  const response = await fetch(API(url));
+  const response = await fetch(API(url), {
+    credentials: 'same-origin'
+  });
   return await response.json();
 }
 
+async function loadNextDeviceId() {
+  const registerIdAlat = $('#registerIdAlat');
+
+  if (!registerIdAlat) return;
+
+  try {
+    const result = await getJSON('next_device_id.php');
+
+    if ((result.ok || result.success) && result.id_alat) {
+      registerIdAlat.value = result.id_alat;
+    }
+
+  } catch (error) {}
+}
+
 function setUser(user) {
+  currentUser = user;
+
   const namaUser = $('#namaUser');
   const deviceId = $('#deviceId');
+  const profilePhotoPreview = $('#profilePhotoPreview');
+  const profilePhotoInitial = $('#profilePhotoInitial');
 
   if (namaUser) namaUser.textContent = user.nama || 'User';
   if (deviceId) deviceId.textContent = user.id_alat || 'MNC-001';
@@ -102,11 +125,21 @@ function setUser(user) {
   if ($('#profileIdAlat')) $('#profileIdAlat').value = user.id_alat || '';
   if ($('#profileTelepon')) $('#profileTelepon').value = user.no_telepon || '-';
   if ($('#profileAlamat')) $('#profileAlamat').value = user.alamat || '';
+
+  if (profilePhotoPreview && profilePhotoInitial) {
+    if (user.foto_profil) {
+      profilePhotoPreview.src = `${user.foto_profil}?v=${Date.now()}`;
+      profilePhotoPreview.style.display = 'block';
+      profilePhotoInitial.style.display = 'none';
+    } else {
+      profilePhotoPreview.removeAttribute('src');
+      profilePhotoPreview.style.display = 'none';
+      profilePhotoInitial.style.display = 'block';
+    }
+  }
 }
 
 function updateCards(latest) {
-  if (!latest) return;
-
   const gasVal = $('#gasVal');
   const tempVal = $('#tempVal');
   const humVal = $('#humVal');
@@ -115,6 +148,21 @@ function updateCards(latest) {
   const alertText = $('#alertText');
   const alertDesc = $('#alertDesc');
   const monitoringView = $('#monitoringView');
+
+  if (monitoringView) {
+    monitoringView.classList.remove('status-danger', 'status-warning');
+  }
+
+  if (!latest) {
+    if (gasVal) gasVal.textContent = '0 PPM';
+    if (tempVal) tempVal.textContent = '0°C';
+    if (humVal) humVal.textContent = '0%';
+    if (gaugeNum) gaugeNum.textContent = '0';
+    if (gasStatus) gasStatus.textContent = 'NO DATA';
+    if (alertText) alertText.textContent = 'Belum Ada Data';
+    if (alertDesc) alertDesc.textContent = 'Belum ada pembacaan sensor untuk alat ini.';
+    return;
+  }
 
   const gas = Number(latest.gas_ppm || 0);
 
@@ -270,7 +318,10 @@ if (goLogin) {
 }
 
 if (goSignup) {
-  goSignup.addEventListener('click', () => showPage('signupPage'));
+  goSignup.addEventListener('click', () => {
+    showPage('signupPage');
+    loadNextDeviceId();
+  });
 }
 
 /* REGISTER */
@@ -281,11 +332,15 @@ if (registerForm) {
     event.preventDefault();
 
     try {
-      await post('register.php', registerForm);
+      const result = await post('register.php', registerForm);
 
-      showToast('Akun berhasil dibuat, silakan login');
+      setUser(result.user || {});
       registerForm.reset();
-      showPage('loginPage');
+      await loadNextDeviceId();
+      window.history.replaceState(null, '', '#dashboardPage');
+      showPage('dashboardPage');
+      await loadReadings();
+      showToast('Akun berhasil dibuat');
 
     } catch (error) {
       showToast(error.message);
@@ -306,6 +361,7 @@ if (loginForm) {
       setUser(result.user || {});
 
       if ($('#dashboardPage')) {
+        window.history.replaceState(null, '', '#dashboardPage');
         showPage('dashboardPage');
         await loadReadings();
         showToast('Login berhasil');
@@ -323,6 +379,7 @@ if (loginForm) {
 $$('.nav-btn[data-view], .primary-wide[data-view]').forEach((button) => {
   button.addEventListener('click', () => {
     showView(button.dataset.view);
+    window.history.replaceState(null, '', `#${button.dataset.view}`);
   });
 });
 
@@ -350,9 +407,10 @@ const simulateBtn = $('#simulateBtn');
 
 if (simulateBtn) {
   simulateBtn.addEventListener('click', async () => {
-    try {
-      await fetch(API('add_reading.php'), {
+  try {
+      const response = await fetch(API('add_reading.php'), {
         method: 'POST',
+        credentials: 'same-origin',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -360,6 +418,12 @@ if (simulateBtn) {
           gas_ppm: Math.floor(80 + Math.random() * 620)
         })
       });
+
+      const result = await response.json();
+
+      if (!result.ok && !result.success) {
+        throw new Error(result.message || 'Gagal tambah data simulasi');
+      }
 
       await loadReadings();
       showToast('Data simulasi ditambahkan');
@@ -370,6 +434,129 @@ if (simulateBtn) {
   });
 }
 
+/* UPLOAD FOTO PROFIL */
+const profilePhotoForm = $('#profilePhotoForm');
+const profilePhotoInput = $('#profilePhotoInput');
+
+if (profilePhotoForm && profilePhotoInput) {
+  profilePhotoInput.addEventListener('change', () => {
+    const file = profilePhotoInput.files[0];
+    const preview = $('#profilePhotoPreview');
+    const initial = $('#profilePhotoInitial');
+
+    if (!file || !preview || !initial) return;
+
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+    initial.style.display = 'none';
+  });
+
+  profilePhotoForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const file = profilePhotoInput.files[0];
+
+    if (!file) {
+      showToast('Pilih foto profil terlebih dahulu');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('foto', file);
+
+      const response = await fetch(API('upload_profile_photo.php'), {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (!result.ok && !result.success) {
+        throw new Error(result.message || 'Gagal upload foto');
+      }
+
+      setUser(result.user || {
+        ...currentUser,
+        foto_profil: result.foto_profil
+      });
+
+      profilePhotoForm.reset();
+      window.history.replaceState(null, '', '#profileView');
+      showToast('Foto profil berhasil diperbarui');
+
+    } catch (error) {
+      showToast(error.message);
+    }
+  });
+}
+
+async function openInitialRoute() {
+  const hash = window.location.hash.replace('#', '');
+
+  if (!hash) {
+    if (currentUser) {
+      showPage('dashboardPage');
+    }
+
+    return;
+  }
+
+  if (hash === 'loginPage') {
+    if (currentUser) {
+      showPage('dashboardPage');
+      return;
+    }
+
+    showPage('loginPage');
+  }
+
+  if (hash === 'signupPage') {
+    if (currentUser) {
+      showPage('dashboardPage');
+      return;
+    }
+
+    showPage('signupPage');
+    await loadNextDeviceId();
+  }
+
+  if (hash === 'dashboardPage') {
+    showPage(currentUser ? 'dashboardPage' : 'loginPage');
+  }
+
+  if (hash === 'profileView') {
+    if (!currentUser) {
+      showPage('loginPage');
+      return;
+    }
+
+    showPage('dashboardPage');
+    showView('profileView');
+  }
+
+  if (hash === 'monitoringView') {
+    if (!currentUser) {
+      showPage('loginPage');
+      return;
+    }
+
+    showPage('dashboardPage');
+    showView('monitoringView');
+  }
+
+  if (hash === 'graphView' || hash === 'performanceView') {
+    if (!currentUser) {
+      showPage('loginPage');
+      return;
+    }
+
+    showPage('dashboardPage');
+    showView(hash);
+  }
+}
+
 /* CEK SESSION */
 (async function boot() {
   try {
@@ -377,14 +564,19 @@ if (simulateBtn) {
 
     if ((result.ok || result.success) && result.user) {
       setUser(result.user);
-
-      if ($('#dashboardPage')) {
-        showPage('dashboardPage');
-        await loadReadings();
-      }
     }
 
   } catch (error) {}
+
+  if (!currentUser) {
+    await loadNextDeviceId();
+  }
+
+  await openInitialRoute();
+
+  if (currentUser && $('#dashboardPage')?.classList.contains('active')) {
+    await loadReadings();
+  }
 })();
 
 /* AUTO REFRESH DATA */
@@ -395,30 +587,3 @@ setInterval(() => {
     loadReadings();
   }
 }, 15000);
-
-/* BUKA PAGE SESUAI HASH URL */
-window.addEventListener('load', () => {
-  const hash = window.location.hash.replace('#', '');
-
-  if (hash === 'loginPage') {
-    showPage('loginPage');
-  }
-
-  if (hash === 'signupPage') {
-    showPage('signupPage');
-  }
-
-  if (hash === 'dashboardPage') {
-    showPage('dashboardPage');
-  }
-
-  if (hash === 'profileView') {
-    showPage('dashboardPage');
-    showView('profileView');
-  }
-
-  if (hash === 'monitoringView') {
-    showPage('dashboardPage');
-    showView('monitoringView');
-  }
-});

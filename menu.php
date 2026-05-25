@@ -230,6 +230,298 @@ $loggedIn = isset($_SESSION['user']);
         font-size: 29px;
       }
     }
+
+    /* Modern refresh */
+    body {
+      background:
+        radial-gradient(circle at 12% 8%, rgba(47, 184, 198, .18), transparent 30%),
+        linear-gradient(135deg, #eaf3f6 0%, #f8fbfc 48%, #e6f1ef 100%);
+      font-family: Inter, Poppins, Arial, sans-serif;
+      color: #10232a;
+    }
+
+    .menu-page {
+      min-height: 100vh;
+      background: transparent;
+      align-items: center;
+      padding: 28px;
+    }
+
+    .menu-phone {
+      width: min(100%, 1120px);
+      min-height: 720px;
+      background: rgba(255, 255, 255, .78);
+      border: 1px solid rgba(255, 255, 255, .78);
+      border-radius: 34px;
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(16, 35, 42, .16);
+      backdrop-filter: blur(18px);
+      display: grid;
+      grid-template-columns: minmax(360px, 1.05fr) minmax(330px, .95fr);
+    }
+
+    .menu-hero {
+      min-height: 720px;
+      padding: 30px;
+      background:
+        linear-gradient(135deg, rgba(15, 111, 125, .94), rgba(16, 35, 42, .9)),
+        url("assets/bg-menu.png");
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-header {
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-wrap img {
+      width: 58px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 7px;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, .18);
+    }
+
+    .brand-text h1,
+    .brand-text p,
+    .auth-link,
+    .auth-link a,
+    .auth-link span {
+      color: #fff;
+    }
+
+    .brand-text h1 {
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .auth-link {
+      background: rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .22);
+      border-radius: 999px;
+      padding: 10px 14px;
+      backdrop-filter: blur(12px);
+    }
+
+    .menu-nav {
+      margin-top: 48px;
+      justify-content: flex-start;
+      gap: 10px;
+      padding: 0;
+      flex-wrap: wrap;
+    }
+
+    .menu-nav a {
+      flex: 0 0 auto;
+      background: rgba(255, 255, 255, .15);
+      border: 1px solid rgba(255, 255, 255, .2);
+      color: #fff;
+      font-size: 13px;
+      padding: 11px 18px;
+      border-radius: 999px;
+      box-shadow: none;
+      transition: background .2s, transform .2s;
+    }
+
+    .menu-nav a:hover {
+      background: rgba(255, 255, 255, .25);
+      transform: translateY(-1px);
+    }
+
+    .welcome-text {
+      margin-top: auto;
+      padding: 0;
+      color: #fff;
+      max-width: 560px;
+    }
+
+    .welcome-text h2 {
+      font-size: clamp(46px, 7vw, 82px);
+      line-height: .94;
+      margin-bottom: 18px;
+      letter-spacing: -2px;
+      color: #fff;
+    }
+
+    .welcome-text p {
+      width: auto;
+      max-width: 460px;
+      color: rgba(255, 255, 255, .8);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .learn-more {
+      margin-top: 24px;
+      color: #10232a;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 13px 18px;
+      font-size: 13px;
+      box-shadow: 0 18px 36px rgba(0, 0, 0, .16);
+    }
+
+    .gascomp-section {
+      margin-top: 0;
+      min-height: 720px;
+      background: #ffffff;
+      color: #10232a;
+      text-align: left;
+      padding: 46px;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .gascomp-section::before {
+      content: "Realtime IoT Monitoring";
+      display: inline-flex;
+      width: max-content;
+      max-width: 100%;
+      margin-bottom: 14px;
+      background: #eaf7f8;
+      color: #0f6f7d;
+      border: 1px solid #c8edf0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+
+    .gascomp-section h2 {
+      color: #10232a;
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: .96;
+      letter-spacing: -1px;
+    }
+
+    .gascomp-section .by {
+      font-size: 14px;
+      color: #6b7d84;
+      margin-top: 10px;
+    }
+
+    .device-img {
+      width: min(210px, 62%);
+      margin: 30px auto;
+      filter: drop-shadow(0 22px 32px rgba(16, 35, 42, .22));
+    }
+
+    .gascomp-section p {
+      color: #5e7078;
+      margin: 0;
+      max-width: 460px;
+      font-size: 15px;
+      line-height: 1.8;
+      font-weight: 500;
+    }
+
+    .learn-intro {
+      color: #5e7078;
+      margin: 16px 0 0;
+      max-width: 520px;
+      font-size: 15px;
+      line-height: 1.8;
+      font-weight: 500;
+    }
+
+    .status-title {
+      margin: 28px 0 14px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #10232a;
+    }
+
+    .safety-note {
+      display: block;
+      color: #5e7078;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .status-card {
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid #dcebed;
+      background: #f8fbfc;
+    }
+
+    .status-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .status-card small {
+      color: #5e7078;
+      line-height: 1.55;
+      display: block;
+    }
+
+    .status-safe strong {
+      color: #1f9f68;
+    }
+
+    .status-warning strong {
+      color: #b87808;
+    }
+
+    .status-danger strong {
+      color: #d94f54;
+    }
+
+    .safety-note {
+      margin-top: 18px;
+      padding: 14px;
+      background: #fff8e8;
+      border: 1px solid #ffe1a6;
+      border-radius: 16px;
+    }
+
+    @media (max-width: 860px) {
+      .menu-page {
+        padding: 0;
+      }
+
+      .menu-phone {
+        grid-template-columns: 1fr;
+        border-radius: 0;
+        min-height: 100vh;
+      }
+
+      .menu-hero,
+      .gascomp-section {
+        min-height: auto;
+        padding: 26px;
+      }
+
+      .menu-hero {
+        min-height: 620px;
+      }
+
+      .welcome-text h2 {
+        font-size: 48px;
+      }
+
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -273,7 +565,7 @@ $loggedIn = isset($_SESSION['user']);
           <p>
             Temukan kemudahan dalam menjaga keamanan rumah berbasis internet bersama kami
           </p>
-          <a class="learn-more" href="#gascomp">Pelajari Lebih Lanjut</a>
+          <a class="learn-more" href="terms.php">Pelajari Lebih Lanjut</a>
         </div>
       </div>
 
@@ -283,11 +575,32 @@ $loggedIn = isset($_SESSION['user']);
 
         <img class="device-img" src="assets/gascomp.png" alt="GASCOMP Device">
 
-        <p>
-          GASCOM adalah sistem monitoring gas berbasis IoT yang terintegrasi secara langsung
-          dengan website. Sistem cerdas ini hadir sebagai solusi praktis untuk mengatasi masalah
-          keterlambatan penanganan kebocoran gas di lingkungan rumah tangga, khususnya bagi
-          para pengguna gas LPG.
+        <p class="learn-intro">
+          GASCOM adalah alat pendeteksi kebocoran gas berbasis IoT yang membantu pengguna
+          memantau kondisi gas LPG secara realtime melalui website. Sistem ini dibuat agar
+          keluarga, pemilik kos, warung, dan dapur kecil bisa lebih cepat mengetahui tanda bahaya.
+        </p>
+
+        <h3 class="status-title">Arti Status GASCOM</h3>
+        <div class="status-grid">
+          <div class="status-card status-safe">
+            <strong>Aman</strong>
+            <small>Kadar gas masih rendah dan kondisi ruangan terpantau normal.</small>
+          </div>
+          <div class="status-card status-warning">
+            <strong>Waspada</strong>
+            <small>Kadar gas mulai naik. Periksa kompor, regulator, selang, dan ventilasi ruangan.</small>
+          </div>
+          <div class="status-card status-danger">
+            <strong>Bahaya</strong>
+            <small>Kadar gas tinggi. Matikan sumber api, buka ventilasi, dan jauhi pemicu listrik.</small>
+          </div>
+        </div>
+
+        <p class="safety-note">
+          GASCOM membantu memberi peringatan dini, tetapi keselamatan tetap membutuhkan tindakan pengguna.
+          Jika tercium bau gas menyengat, jangan menyalakan api atau saklar listrik, buka pintu/jendela,
+          lalu hubungi orang terdekat atau petugas terkait.
         </p>
       </section>
 

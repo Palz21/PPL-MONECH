@@ -39,7 +39,7 @@
 
             <label>
               ID Alat
-              <input name="id_alat" type="text" value="MNC-001" required>
+              <input id="registerIdAlat" name="id_alat" type="text" value="MNC-001" readonly>
             </label>
 
             <label>
@@ -278,14 +278,22 @@
         </div>
       </div>
 
-      <button class="profile-home-btn" data-view="homeView">⌂</button>
+      <button class="profile-home-btn" data-view="homeView" aria-label="Kembali ke dashboard">⌂</button>
     </div>
 
     <div class="profile-avatar">
-      <span>♡</span>
+      <img id="profilePhotoPreview" alt="Foto profil">
+      <span id="profilePhotoInitial" aria-hidden="true">♡</span>
     </div>
 
     <div class="profile-form-card">
+      <form class="profile-photo-form" id="profilePhotoForm" enctype="multipart/form-data">
+        <label>Foto Profil
+          <input id="profilePhotoInput" name="foto" type="file" accept="image/png,image/jpeg,image/webp">
+        </label>
+        <button class="primary-wide" type="submit">Simpan Foto</button>
+      </form>
+
       <label>Nama
         <input id="profileNama" readonly>
       </label>
