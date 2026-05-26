@@ -108,6 +108,7 @@ function setUser(user) {
   if ($('#profileNama')) $('#profileNama').value = user.nama || '';
   if ($('#profileEmail')) $('#profileEmail').value = user.email || '';
   if ($('#profileIdAlat')) $('#profileIdAlat').value = user.id_alat || '';
+  if ($('#profileDeviceToken')) $('#profileDeviceToken').value = user.device_token || '';
   if ($('#profileTelepon')) $('#profileTelepon').value = user.no_telepon || '-';
   if ($('#profileAlamat')) $('#profileAlamat').value = user.alamat || '';
 
@@ -187,6 +188,36 @@ function updateCards(latest) {
   }
 }
 
+function updateDeviceStatus(device) {
+  const deviceLiveStatus = $('#deviceLiveStatus');
+  const deviceLastSeen = $('#deviceLastSeen');
+
+  if (!device) {
+    if (deviceLiveStatus) deviceLiveStatus.textContent = 'Menunggu Data';
+    if (deviceLastSeen) deviceLastSeen.textContent = 'Belum ada data masuk dari ESP32';
+    return;
+  }
+
+  const status = device.status || 'offline';
+
+  if (deviceLiveStatus) {
+    deviceLiveStatus.textContent = status.toUpperCase();
+    deviceLiveStatus.className = `live-${status}`;
+  }
+
+  if (deviceLastSeen) {
+    if (status === 'offline') {
+      deviceLastSeen.textContent = device.last_seen
+        ? `Offline. Data terakhir: ${device.last_seen}`
+        : 'Offline. Belum ada data masuk dari ESP32';
+    } else {
+      deviceLastSeen.textContent = device.last_seen
+        ? `Terakhir update: ${device.last_seen}`
+        : 'Belum ada data masuk dari ESP32';
+    }
+  }
+}
+
 function updateTable(rows) {
   const historyBody = $('#historyBody');
 
@@ -220,6 +251,7 @@ async function loadReadings() {
     historyData = result.history || [];
 
     updateCards(latest);
+    updateDeviceStatus(result.device);
     updateTable(historyData);
     drawChart();
 
@@ -385,38 +417,6 @@ if (logoutBtn) {
   });
 }
 
-/* SIMULASI DATA */
-const simulateBtn = $('#simulateBtn');
-
-if (simulateBtn) {
-  simulateBtn.addEventListener('click', async () => {
-  try {
-      const response = await fetch(API('add_reading.php'), {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          gas_ppm: Math.floor(80 + Math.random() * 620)
-        })
-      });
-
-      const result = await response.json();
-
-      if (!result.ok && !result.success) {
-        throw new Error(result.message || 'Gagal tambah data simulasi');
-      }
-
-      await loadReadings();
-      showToast('Data simulasi ditambahkan');
-
-    } catch (error) {
-      showToast('Gagal tambah data simulasi');
-    }
-  });
-}
-
 /* UPLOAD FOTO PROFIL */
 const profilePhotoForm = $('#profilePhotoForm');
 const profilePhotoInput = $('#profilePhotoInput');
@@ -564,4 +564,4 @@ setInterval(() => {
   if (dashboardPage && dashboardPage.classList.contains('active')) {
     loadReadings();
   }
-}, 15000);
+}, 3000);

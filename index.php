@@ -193,9 +193,11 @@
               <h3 id="alertText">Aman</h3>
               <p id="alertDesc">Kondisi gas berada pada level aman.</p>
 
-              <button class="primary-wide" id="simulateBtn">
-                Tambah Data Simulasi
-              </button>
+              <div class="device-live-box">
+                <span>Status Alat</span>
+                <strong id="deviceLiveStatus">Menunggu Data</strong>
+                <small id="deviceLastSeen">Belum ada data masuk dari ESP32</small>
+              </div>
             </div>
 
             <div class="table-card">
@@ -304,6 +306,10 @@
 
       <label>ID Alat
         <input id="profileIdAlat" readonly>
+      </label>
+
+      <label>Token Alat
+        <input id="profileDeviceToken" readonly>
       </label>
 
       <label>No Telepon

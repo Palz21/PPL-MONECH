@@ -32,6 +32,16 @@ function input_json(){
 }
 function ok($data=[]){ echo json_encode(['success'=>true] + $data); exit; }
 function fail($msg,$code=400){ http_response_code($code); echo json_encode(['success'=>false,'message'=>$msg]); exit; }
+function device_token_for_id($id_alat){
+    if (preg_match('/(\d+)$/', $id_alat, $matches)) {
+        return 'monech-device-' . str_pad($matches[1], 3, '0', STR_PAD_LEFT);
+    }
+
+    $slug = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', $id_alat));
+    $slug = trim($slug, '-');
+
+    return 'monech-device-' . ($slug ?: 'unknown');
+}
 function require_login(){
     if (empty($_SESSION['user'])) {
         fail('Belum login.', 401);

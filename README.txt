@@ -13,7 +13,7 @@ CATATAN LOGIN DAN DATA:
 - Register dan login memakai tabel users.
 - Field users yang dibutuhkan: nama, email, id_alat, alamat, no_telepon, password_hash.
 - Data dashboard diambil dari sensor_readings sesuai id_alat user yang login.
-- Tombol Tambah Data Simulasi hanya bisa dipakai setelah login.
+- Data realtime dikirim dari ESP32 ke api/device_reading.php memakai token alat.
 
 CONFIG DATABASE:
 api/config.php memakai default Laragon:
@@ -22,4 +22,7 @@ host=localhost, user=root, password kosong, database=monech
 CATATAN:
 - Project ini menggunakan PHP + MySQL + HTML/CSS/JS tanpa framework.
 - Data grafik memakai tabel sensor_readings.
-- Tombol Tambah Data Simulasi menambahkan data sensor baru ke database untuk user yang login.
+- Contoh kode ESP32 + MQ-2 ada di esp32_mq2_gascom.ino.
+- Token alat bisa dilihat di halaman Profil setelah login.
+- Jika ada lebih dari satu alat, setiap ESP32 harus memakai ID alat dan token miliknya sendiri.
+- Pola token mengikuti nomor alat, contoh MNC-002 memakai monech-device-002.

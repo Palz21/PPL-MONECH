@@ -492,6 +492,37 @@ button {
   color: var(--muted);
 }
 
+.device-live-box {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #f6fafb;
+}
+
+.device-live-box span,
+.device-live-box small {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.device-live-box strong {
+  display: block;
+  margin: 6px 0;
+  font-size: 20px;
+  color: var(--teal);
+}
+
+.device-live-box strong.live-warning {
+  color: var(--warn);
+}
+
+.device-live-box strong.live-danger,
+.device-live-box strong.live-offline {
+  color: var(--danger);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

@@ -11,9 +11,11 @@ if (!$email || !$password) {
 }
 
 $stmt = $pdo->prepare(
-    'SELECT id, nama, email, id_alat, alamat, no_telepon, foto_profil, password_hash
-     FROM users
-     WHERE email = ?
+    'SELECT u.id, u.nama, u.email, u.id_alat, u.alamat, u.no_telepon,
+            u.foto_profil, u.password_hash, d.api_token AS device_token
+     FROM users u
+     LEFT JOIN devices d ON d.id_alat = u.id_alat
+     WHERE u.email = ?
      LIMIT 1'
 );
 
@@ -33,7 +35,8 @@ $_SESSION['user'] = [
     'id_alat'    => $user['id_alat'],
     'alamat'     => $user['alamat'] ?? '',
     'no_telepon' => $user['no_telepon'] ?? '',
-    'foto_profil'=> $user['foto_profil'] ?? ''
+    'foto_profil'=> $user['foto_profil'] ?? '',
+    'device_token' => $user['device_token'] ?? ''
 ];
 
 ok([

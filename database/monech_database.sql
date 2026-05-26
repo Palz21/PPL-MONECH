@@ -18,7 +18,9 @@ CREATE TABLE IF NOT EXISTS devices (
   id_alat VARCHAR(50) NOT NULL UNIQUE,
   nama_alat VARCHAR(100) DEFAULT 'MONECH Device',
   lokasi VARCHAR(120) DEFAULT 'Area Utama',
+  api_token VARCHAR(100) NOT NULL,
   status ENUM('online','offline','warning','danger') DEFAULT 'online',
+  last_seen TIMESTAMP NULL DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -33,8 +35,8 @@ CREATE TABLE IF NOT EXISTS sensor_readings (
   INDEX(id_alat), INDEX(created_at)
 );
 
-INSERT IGNORE INTO devices (id_alat, nama_alat, lokasi, status) VALUES
-('MNC-001','MONECH Sensor 01','Dapur / Kitchen','online');
+INSERT IGNORE INTO devices (id_alat, nama_alat, lokasi, api_token, status, last_seen) VALUES
+('MNC-001','MONECH Sensor 01','Dapur / Kitchen','monech-device-001','online',NOW());
 
 INSERT INTO sensor_readings (id_alat, gas_ppm, suhu, kelembapan, status, created_at) VALUES
 ('MNC-001',120,28.4,65,'safe',NOW() - INTERVAL 7 HOUR),
