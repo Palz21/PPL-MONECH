@@ -39,7 +39,7 @@
 
             <label>
               ID Alat
-              <input id="registerIdAlat" name="id_alat" type="text" value="MNC-001" readonly>
+              <input name="id_alat" type="text" value="MNC-001" required>
             </label>
 
             <label>

@@ -5,12 +5,13 @@ $d = input_json();
 
 $nama       = trim($d['nama'] ?? '');
 $email      = trim($d['email'] ?? '');
+$id_alat    = trim($d['id_alat'] ?? '');
 $alamat     = trim($d['alamat'] ?? '');
 $no_telepon = trim($d['no_telepon'] ?? '');
 $password   = $d['password'] ?? '';
 $konfirmasi = $d['konfirmasi'] ?? '';
 
-if (!$nama || !$email || !$alamat || !$password) {
+if (!$nama || !$email || !$id_alat || !$alamat || !$password) {
     fail('Semua field wajib diisi.');
 }
 
@@ -27,13 +28,6 @@ if ($password !== $konfirmasi) {
 }
 
 try {
-    $stmtNext = $pdo->query(
-        "SELECT COALESCE(MAX(CAST(SUBSTRING(id_alat, 5) AS UNSIGNED)), 0) + 1 AS next_number
-         FROM users
-         WHERE id_alat REGEXP '^MNC-[0-9]+$'"
-    );
-    $nextNumber = (int) $stmtNext->fetchColumn();
-    $id_alat = 'MNC-' . str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
     $stmt = $pdo->prepare(

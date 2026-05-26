@@ -94,21 +94,6 @@ async function getJSON(url) {
   return await response.json();
 }
 
-async function loadNextDeviceId() {
-  const registerIdAlat = $('#registerIdAlat');
-
-  if (!registerIdAlat) return;
-
-  try {
-    const result = await getJSON('next_device_id.php');
-
-    if ((result.ok || result.success) && result.id_alat) {
-      registerIdAlat.value = result.id_alat;
-    }
-
-  } catch (error) {}
-}
-
 function setUser(user) {
   currentUser = user;
 
@@ -320,7 +305,6 @@ if (goLogin) {
 if (goSignup) {
   goSignup.addEventListener('click', () => {
     showPage('signupPage');
-    loadNextDeviceId();
   });
 }
 
@@ -336,7 +320,6 @@ if (registerForm) {
 
       setUser(result.user || {});
       registerForm.reset();
-      await loadNextDeviceId();
       window.history.replaceState(null, '', '#dashboardPage');
       showPage('dashboardPage');
       await loadReadings();
@@ -519,7 +502,6 @@ async function openInitialRoute() {
     }
 
     showPage('signupPage');
-    await loadNextDeviceId();
   }
 
   if (hash === 'dashboardPage') {
@@ -567,10 +549,6 @@ async function openInitialRoute() {
     }
 
   } catch (error) {}
-
-  if (!currentUser) {
-    await loadNextDeviceId();
-  }
 
   await openInitialRoute();
 
