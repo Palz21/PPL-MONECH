@@ -90,6 +90,24 @@ PREPARE stmt_last_seen FROM @sql_last_seen;
 EXECUTE stmt_last_seen;
 DEALLOCATE PREPARE stmt_last_seen;
 
+SET @has_last_alert_at := (
+  SELECT COUNT(*)
+  FROM INFORMATION_SCHEMA.COLUMNS
+  WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'devices'
+    AND COLUMN_NAME = 'last_alert_at'
+);
+
+SET @sql_last_alert_at := IF(
+  @has_last_alert_at = 0,
+  'ALTER TABLE devices ADD COLUMN last_alert_at TIMESTAMP NULL DEFAULT NULL AFTER last_seen',
+  'SELECT ''Kolom last_alert_at sudah ada'' AS info'
+);
+
+PREPARE stmt_last_alert_at FROM @sql_last_alert_at;
+EXECUTE stmt_last_alert_at;
+DEALLOCATE PREPARE stmt_last_alert_at;
+
 INSERT INTO devices (id_alat, nama_alat, lokasi, api_token, status)
 SELECT
   u.id_alat,

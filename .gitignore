@@ -1,2 +1,3 @@
 uploads/profile/*
 !uploads/profile/.gitkeep
+api/telegram_config.local.php

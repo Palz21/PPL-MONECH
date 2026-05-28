@@ -27,3 +27,19 @@ Website monitoring kebocoran gas berbasis PHP, MySQL, HTML, CSS, dan JavaScript.
 - Contoh kode ESP32 ada di `esp32_mq2_gascom.ino`.
 
 Jika memakai Laragon lokal, `SERVER_URL` di kode ESP32 harus memakai IP laptop, bukan `localhost`.
+
+## Notifikasi Telegram
+
+Telegram dipilih karena paling ringan untuk project ini. WhatsApp otomatis biasanya butuh WhatsApp Business API atau layanan pihak ketiga.
+
+Setup singkat:
+
+1. Buat bot lewat Telegram `@BotFather`.
+2. Ambil bot token.
+3. Kirim pesan apa pun ke bot, atau masukkan bot ke group Telegram.
+4. Cari `chat_id` memakai URL:
+   `https://api.telegram.org/botTOKEN_BOT/getUpdates`
+5. Copy `api/telegram_config.local.example.php` menjadi `api/telegram_config.local.php`.
+6. Isi `TELEGRAM_BOT_TOKEN` dan `TELEGRAM_CHAT_ID`.
+
+Notifikasi dikirim saat status sensor `danger`. Supaya tidak spam, notifikasi dibatasi 1 kali per 5 menit per alat.

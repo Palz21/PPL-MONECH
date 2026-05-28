@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS devices (
   api_token VARCHAR(100) NOT NULL,
   status ENUM('online','offline','warning','danger') DEFAULT 'online',
   last_seen TIMESTAMP NULL DEFAULT NULL,
+  last_alert_at TIMESTAMP NULL DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

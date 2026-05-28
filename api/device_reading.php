@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/config.php';
+require __DIR__ . '/notifications.php';
 
 $d = input_json();
 
@@ -58,7 +59,17 @@ $stmtUpdateDevice = $pdo->prepare(
 );
 $stmtUpdateDevice->execute([$deviceStatus, $id_alat]);
 
+$notificationSent = maybe_send_gas_alert(
+    $pdo,
+    $id_alat,
+    $gas,
+    $suhu,
+    $kelembapan,
+    $status
+);
+
 ok([
     'message' => 'Data sensor diterima.',
-    'status' => $status
+    'status' => $status,
+    'notification_sent' => $notificationSent
 ]);

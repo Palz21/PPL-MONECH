@@ -26,3 +26,12 @@ CATATAN:
 - Token alat bisa dilihat di halaman Profil setelah login.
 - Jika ada lebih dari satu alat, setiap ESP32 harus memakai ID alat dan token miliknya sendiri.
 - Pola token mengikuti nomor alat, contoh MNC-002 memakai monech-device-002.
+
+NOTIFIKASI TELEGRAM:
+1. Buat bot lewat @BotFather.
+2. Ambil token bot.
+3. Kirim pesan ke bot atau masukkan bot ke group.
+4. Buka https://api.telegram.org/botTOKEN_BOT/getUpdates untuk melihat chat_id.
+5. Copy api/telegram_config.local.example.php menjadi api/telegram_config.local.php.
+6. Isi TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID.
+7. Notifikasi dikirim saat status sensor danger, maksimal 1 kali per 5 menit per alat.
